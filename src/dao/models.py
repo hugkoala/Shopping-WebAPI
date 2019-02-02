@@ -34,28 +34,33 @@ class DAO:
         db.close()
 
     @staticmethod
-    def query_first(obj):
-        return db.query(obj).one()
+    def query_first(obj=None, condition='', **kwargs):
+        if not obj:
+            return
+        if condition == '':
+            return db.query(obj).first()
+        else:
+            print(condition.format(**kwargs))
+            return db.query(obj).filter(condition.format(**kwargs)).first()
 
     @staticmethod
-    def query_list(obj):
-        return db.query(obj).all()
+    def query_list(obj=None, condition='', **kwargs):
+        if not obj:
+            return
+        if condition == '':
+            return db.query(obj).all()
+        else:
+            print(condition.format(**kwargs))
+            return db.query(obj).filter(condition.format(**kwargs)).all()
 
     @staticmethod
     def insert(obj):
         db.add(obj)
 
-if __name__ == '__main__':
-    from dborm import User
-    from dao_utils import DAOUtils
-    db = Database()
-
-    user = User(account='leo.li1', pwd='123456', name='Leo', credit='est125')
-
-    # DAOUtils.get_user_dao().insert_user(user)
-    users = DAOUtils.get_user_dao().get_users()
-    for item in users:
-        print(item.ACCOUNT)
+    @staticmethod
+    def update(obj=None, condition='', **kwargs):
+        if not obj:
+            return
 
 
 
