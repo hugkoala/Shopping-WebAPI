@@ -30,6 +30,10 @@ class DAO:
         db.commit()
 
     @staticmethod
+    def rollback():
+        db.rollback()
+
+    @staticmethod
     def close():
         db.close()
 

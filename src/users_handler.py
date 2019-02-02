@@ -1,7 +1,8 @@
-from flask import request, Flask;
-from dao.models import DAO;
+from flask import request, Flask, jsonify;
+# from dao.models import DAO;
 from dao.dao_utils import DAOUtils;
-from dao.dborm import User
+from dao.dborm import User;
+import sys;
 
 
 class UsersHandler:
@@ -11,6 +12,12 @@ class UsersHandler:
         input_json = request.get_json()
         user = User(account=input_json['account'], pwd=input_json['password'], name=input_json['name'],
                     credit=input_json['credit'])
-        DAOUtils.get_user_dao().insert_user(user)
-        DAO.commit()
-        return Flask(__name__).make_response(('', 201))
+        try:
+            DAOUtils.get_user_dao().insert_user(user)
+            DAOUtils.commit()
+            return Flask(__name__).make_response(('', 201))
+        except:
+            DAOUtils.rollback()
+            error_result = dict()
+            error_result['error'] = str(sys.exc_info())
+            return Flask(__name__).make_response((jsonify(error_result), 406))
