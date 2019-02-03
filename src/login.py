@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, json;
-# from dao.models import DAO;
 from dao.dao_utils import DAOUtils;
 import time;
+from hashlib import md5;
 
 
 class Login:
@@ -10,7 +10,8 @@ class Login:
     def login():
         input_json = request.get_json()
         user = DAOUtils.get_user_dao().get_user(condition="ACCOUNT = '{ACCOUNT}' AND PASSWORD = '{PASSWORD}'",
-                                                ACCOUNT=input_json['account'], PASSWORD=input_json['password'])
+                                                ACCOUNT=input_json['account'],
+                                                PASSWORD=md5(input_json['password'].encode('utf-8')).hexdigest())
 
         if user:
             result = dict()

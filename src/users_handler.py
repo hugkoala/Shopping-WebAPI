@@ -1,5 +1,4 @@
 from flask import request, Flask, jsonify;
-# from dao.models import DAO;
 from dao.dao_utils import DAOUtils;
 from dao.dborm import User;
 import sys;
@@ -21,3 +20,5 @@ class UsersHandler:
             error_result = dict()
             error_result['error'] = str(sys.exc_info())
             return Flask(__name__).make_response((jsonify(error_result), 406))
+
+

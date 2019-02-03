@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, json;
 from flask_sqlalchemy import SQLAlchemy;
+from user_handler import UserHandler;
 from users_handler import UsersHandler;
 from login import Login;
 
@@ -16,22 +17,18 @@ def login():
 # 註冊
 @app.route('/users', methods=['POST'])
 def add_user():
-    return UsersHandler().add_user()
+    return UsersHandler.add_user()
 
 
-@app.route('/user/id', methods=['GET'])
-def get_user(id):
-    pass
-
-
-@app.route('/user/id', methods=['PUT'])
-def update_user(id):
-    pass
+@app.route('/user/<account>', methods=['GET'])
+def get_user(account):
+    return UserHandler.get_user(account)
 
 
 @app.route('/user', methods=['DELETE'])
 def delete_user(id):
     pass
+
 
 if __name__ == '__main__':
     app.run(debug=True)
