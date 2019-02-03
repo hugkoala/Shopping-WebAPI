@@ -20,7 +20,7 @@ class User(Base):
     CREATED_TIME = Column('CREATED_TIME', Numeric(13))
     LAST_LOGIN_TIME = Column('LAST_LOGIN_TIME', Numeric(13))
 
-    CART_M = relationship('CartM')
+    CART = relationship('Cart')
 
     def __init__(self, account=None, pwd=None, name=None, credit=None):
         self.ACCOUNT = account
@@ -49,29 +49,18 @@ class Product(Base):
         self.CREATED_TIME = int(round(time.time() * 1000))
 
 
-class CartM(Base):
-    __tablename__ = 'CART_M'
+class Cart(Base):
+    __tablename__ = 'CART'
 
-    CARTM_ID = Column('CARTM_ID', String(36), primary_key=True)
+    CART_ID = Column('CART_ID', String(36), primary_key=True)
     USER_ID = Column('USER_ID', String(36), ForeignKey('USERS.USER_ID'))
-
-    CARTD = relationship('CartD')
-
-    def __init__(self, user_id=None):
-        self.CARTM_ID = str(uuid.uuid4())
-        self.USER_ID = user_id
-
-
-class CartD(Base):
-    __tablename__ = 'CART_D'
-
-    CARTD_ID = Column('CARTD_ID', String(36), primary_key=True)
-    CARTM_ID = Column('CARTM_ID', String(36), ForeignKey('CARTM.CARTM_ID'))
-    ITEM_ID = Column('ITEM_ID', Numeric(10))
+    ITEM_ID = Column('ITEM_ID', Numeric(10), ForeignKey('PRODUCTS.ITEM_ID'))
     AMOUNT = Column('AMOUNT', Numeric(8))
 
-    def __init__(self, cartm_id=None, item_id=None, amount=None):
-        self.CARTD_ID = str(uuid.uuid4())
-        self.CARTM_ID = cartm_id
+    def __init__(self, user_id=None, item_id=None, amount=None):
+        self.CART_ID = str(uuid.uuid4())
+        self.USER_ID = user_id
         self.ITEM_ID = item_id
         self.AMOUNT = amount
+
+

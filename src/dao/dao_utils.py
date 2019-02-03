@@ -6,5 +6,9 @@ class DAOUtils(DAO):
     @staticmethod
     def get_user_dao():
         from .user_dao_impl import UserDAOImpl
-        # return user_dao_impl()
         return UserDAOImpl()
+
+    @staticmethod
+    def get_cart_dao():
+        from .cart_dao_impl import CartDAOImpl
+        return CartDAOImpl()
