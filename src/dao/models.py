@@ -44,7 +44,6 @@ class DAO:
         if condition == '':
             return db.query(obj).first()
         else:
-            print(condition.format(**kwargs))
             return db.query(obj).filter(condition.format(**kwargs)).first()
 
     @staticmethod
@@ -54,7 +53,6 @@ class DAO:
         if condition == '':
             return db.query(obj).all()
         else:
-            print(condition.format(**kwargs))
             return db.query(obj).filter(condition.format(**kwargs)).all()
 
     @staticmethod
@@ -65,6 +63,10 @@ class DAO:
     def update(obj=None, condition='', **kwargs):
         if not obj:
             return
+
+    @staticmethod
+    def delete(obj):
+        db.delete(obj)
 
 
 

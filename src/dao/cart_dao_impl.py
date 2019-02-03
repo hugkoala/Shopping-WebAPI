@@ -1,5 +1,6 @@
 from .dao_utils import DAOUtils;
 from .cart_dao import CartDAO;
+from .dborm import Cart;
 
 
 class CartDAOImpl(CartDAO):
@@ -10,6 +11,14 @@ class CartDAOImpl(CartDAO):
             DAOUtils.insert(cart)
         except:
             raise
+
+    @staticmethod
+    def get_cart(condition, **kwargs):
+        return DAOUtils.query_list(Cart, condition, **kwargs)
+
+    @staticmethod
+    def delete_cart(cart):
+        DAOUtils.delete(cart)
 
 
 

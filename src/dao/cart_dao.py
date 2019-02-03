@@ -7,3 +7,10 @@ class CartDAO(metaclass=ABCMeta):
     def insert_cart(self):
         pass
 
+    @abstractmethod
+    def get_cart(self):
+        pass
+
+    @abstractmethod
+    def delete_cart(self):
+        pass

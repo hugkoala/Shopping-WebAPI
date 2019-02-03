@@ -27,10 +27,14 @@ def get_user(account):
     return UserHandler.get_user(account)
 
 
-# 商品加入至購物車
-@app.route('/cart', methods=['POST'])
-def add_cart():
-    return CartHandler.add_cart()
+# 商品加入至購物車、購物車移除商品、查詢購物車項目列表
+@app.route('/cart', methods=['GET', 'POST', 'DELETE'])
+def cart_handler():
+    return CartHandler.cart_handler()
+
+
+# 購物車結帳
+# @app.route('/')
 
 if __name__ == '__main__':
     app.run(debug=True)

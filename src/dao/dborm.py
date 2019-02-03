@@ -20,8 +20,6 @@ class User(Base):
     CREATED_TIME = Column('CREATED_TIME', Numeric(13))
     LAST_LOGIN_TIME = Column('LAST_LOGIN_TIME', Numeric(13))
 
-    CART = relationship('Cart')
-
     def __init__(self, account=None, pwd=None, name=None, credit=None):
         self.ACCOUNT = account
         self.PASSWORD = md5(pwd.encode('utf-8')).hexdigest()
@@ -56,6 +54,9 @@ class Cart(Base):
     USER_ID = Column('USER_ID', String(36), ForeignKey('USERS.USER_ID'))
     ITEM_ID = Column('ITEM_ID', Numeric(10), ForeignKey('PRODUCTS.ITEM_ID'))
     AMOUNT = Column('AMOUNT', Numeric(8))
+
+    PRODUCT = relationship('Product')
+    USER = relationship('User')
 
     def __init__(self, user_id=None, item_id=None, amount=None):
         self.CART_ID = str(uuid.uuid4())
