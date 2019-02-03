@@ -65,3 +65,37 @@ class Cart(Base):
         self.AMOUNT = amount
 
 
+class OrderHeader(Base):
+    __tablename__ = 'ORDER_HEADER'
+
+    ORD_NO = Column('ORD_NO', String(15), primary_key=True)
+    USER_ID = Column('USER_ID', String(36), ForeignKey('USERS.USER_ID'))
+    CREATED_TIME = Column('CREATED_TIME', Numeric(13))
+    SUB_TOTAL = Column('SUB_TOTAL', Numeric(20))
+
+    USER = relationship('User')
+    ORDERITEM = relationship('OrderItem')
+
+    def __init__(self, ord_no=None, user_id=None, sub_total=None):
+        self.ORD_NO = ord_no
+        self.USER_ID = user_id
+        self.CREATED_TIME = int(round(time.time() * 1000))
+        self.SUB_TOTAL = sub_total
+
+
+class OrderItem(Base):
+    __tablename__ = 'ORDER_ITEM'
+
+    ORDER_ITEM_ID = Column('ORDER_ITEM_ID', String(36), primary_key=True)
+    ORD_NO = Column('ORD_NO', String(15), ForeignKey('ORDER_HEADER.ORD_NO'))
+    ITEM_ID = Column('ITEM_ID', Numeric(10), ForeignKey('PRODUCTS.ITEM_ID'))
+    AMOUNT = Column('AMOUNT', Numeric(8))
+
+    PRODUCT = relationship('Product')
+
+    def __init__(self, ord_no=None, item_id=None, amount=None):
+        self.ORDER_ITEM_ID = str(uuid.uuid4())
+        self.ORD_NO = ord_no
+        self.ITEM_ID = item_id
+        self.AMOUNT = amount
+
