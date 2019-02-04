@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, json;
-from flask_sqlalchemy import SQLAlchemy;
 from user_handler import UserHandler;
 from users_handler import UsersHandler;
 from cart_handler import CartHandler;
+from order_handler import OrderHandler;
 from login import Login;
 
 
@@ -34,7 +34,10 @@ def cart_handler():
 
 
 # 購物車結帳
-# @app.route('/')
+@app.route('/order', methods=['POST'])
+def check_out_to_order():
+    return OrderHandler.cart_to_order()
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -12,3 +12,8 @@ class DAOUtils(DAO):
     def get_cart_dao():
         from .cart_dao_impl import CartDAOImpl
         return CartDAOImpl()
+
+    @staticmethod
+    def get_order_dao():
+        from .order_dao_impl import OrderDAOImpl
+        return OrderDAOImpl()

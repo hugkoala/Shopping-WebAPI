@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine;
 from sqlalchemy.orm import sessionmaker;
+from sqlalchemy.sql import elements;
+from sqlalchemy.ext.declarative.api import DeclarativeMeta;
 
 
 # Setting Database Info
@@ -39,21 +41,51 @@ class DAO:
 
     @staticmethod
     def query_first(obj=None, condition='', **kwargs):
-        if not obj:
+        if not (isinstance(obj, elements.Label) or isinstance(obj, DeclarativeMeta)):
             return
-        if condition == '':
-            return db.query(obj).first()
-        else:
-            return db.query(obj).filter(condition.format(**kwargs)).first()
+        return DAO.__query_filter(
+            obj=obj,
+            condition=condition,
+            query_type='one',
+            **kwargs
+        )
 
     @staticmethod
     def query_list(obj=None, condition='', **kwargs):
-        if not obj:
+        if not (isinstance(obj, elements.Label) or isinstance(obj, DeclarativeMeta)):
             return
         if condition == '':
             return db.query(obj).all()
         else:
             return db.query(obj).filter(condition.format(**kwargs)).all()
+
+    @staticmethod
+    def __query_filter(obj=None, condition='', query_type=None, **kwargs):
+        if condition == '':
+            return DAO.__query_type(
+                obj=obj,
+                query_type=query_type,
+                query_filter=None
+            )
+        elif isinstance(condition, str):
+            return DAO.__query_type(
+                obj=obj,
+                query_type=query_type,
+                query_filter=condition.format(**kwargs)
+            )
+        elif isinstance(condition, elements.BooleanClauseList) or isinstance(condition, elements.BinaryExpression):
+            return DAO.__query_type(
+                obj=obj,
+                query_type=query_type,
+                query_filter=condition
+            )
+
+    @staticmethod
+    def __query_type(obj=None, query_type=None, query_filter=None):
+            if query_type == 'one':
+                return db.query(obj).filter(query_filter).first()
+            else:
+                return db.query(obj).filter(query_filter).all()
 
     @staticmethod
     def insert(obj):
