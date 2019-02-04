@@ -13,7 +13,7 @@ class CartDAOImpl(CartDAO):
             raise
 
     @staticmethod
-    def get_cart(condition, **kwargs):
+    def get_carts(condition, **kwargs):
         return DAOUtils.query_list(Cart, condition, **kwargs)
 
     @staticmethod

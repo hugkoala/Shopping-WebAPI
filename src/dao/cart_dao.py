@@ -8,7 +8,7 @@ class CartDAO(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_cart(self):
+    def get_carts(self):
         pass
 
     @abstractmethod

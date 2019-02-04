@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, json;
 from user_handler import UserHandler;
 from users_handler import UsersHandler;
 from cart_handler import CartHandler;
+from carts_handler import CartsHandler;
 from order_handler import OrderHandler;
 from login import Login;
 
@@ -27,10 +28,16 @@ def get_user(account):
     return UserHandler.get_user(account)
 
 
-# 商品加入至購物車、購物車移除商品、查詢購物車項目列表
-@app.route('/cart', methods=['GET', 'POST', 'DELETE'])
+# 商品加入至購物車、購物車移除商品
+@app.route('/cart', methods=['POST', 'DELETE'])
 def cart_handler():
     return CartHandler.cart_handler()
+
+
+# 查詢購物車項目列表
+@app.route('/carts', methods=['GET'])
+def carts_handler():
+    return CartsHandler.carts_handler()
 
 
 # 購物車結帳
