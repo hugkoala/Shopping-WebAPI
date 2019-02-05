@@ -16,7 +16,7 @@ class User(Base):
     PASSWORD = Column('PASSWORD', String(50))
     NAME = Column('NAME', String(20))
     USER_ID = Column('USER_ID', String(36), primary_key=True)
-    CREDIT = Column('CREDIT', String(30))
+    CREDIT = Column('CREDIT', Numeric(20))
     CREATED_TIME = Column('CREATED_TIME', Numeric(13))
     LAST_LOGIN_TIME = Column('LAST_LOGIN_TIME', Numeric(13))
 

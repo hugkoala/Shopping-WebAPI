@@ -28,6 +28,12 @@ def get_user(account):
     return UserHandler.get_user(account)
 
 
+# 會員增加額度
+@app.route('/user/credit', methods=['POST'])
+def add_credit():
+    return UserHandler.add_credit()
+
+
 # 商品加入至購物車、購物車移除商品
 @app.route('/cart', methods=['POST', 'DELETE'])
 def cart_handler():
