@@ -22,3 +22,8 @@ class DAOUtils(DAO):
     def get_order_dao():
         from .order_dao_impl import OrderDAOImpl
         return OrderDAOImpl()
+
+    @staticmethod
+    def get_product_dao():
+        from .product_dao_impl import ProductDAOImpl
+        return ProductDAOImpl()

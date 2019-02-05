@@ -2,8 +2,10 @@ from flask import Flask, jsonify, request, json;
 from dao.dao_utils import DAOUtils;
 from dao.dborm import Cart
 from log_utils import LogUtils;
+from threading import Lock;
 import sys;
 
+lock = Lock()
 
 class CartHandler:
 
@@ -23,37 +25,48 @@ class CartHandler:
     @staticmethod
     def __add_cart():
         input_json = request.get_json()
-        cart = Cart(user_id=input_json['user_id'], item_id=input_json['item_id'], amount=input_json['amount'])
-        try:
-            DAOUtils.get_cart_dao().insert_cart(cart)
-            LogUtils.insert_user_log(user_id=input_json['user_id'],
-                                     action='加入商品至購物車', remark=str(json.dumps(input_json)))
-            DAOUtils.commit()
-            return Flask(__name__).make_response(('', 201))
-        except:
-            DAOUtils.rollback()
-            error_result = dict()
-            error_result['error'] = str(sys.exc_info())
-            return Flask(__name__).make_response((jsonify(error_result), 406))
+        with lock:
+            product = DAOUtils.get_product_dao().get_product("ITEM_ID = '{ITEM_ID}'", ITEM_ID=input_json['item_id'])
+            if input_json['amount'] > product.AMOUNT:
+                error_result = dict()
+                error_result['error'] = '商品庫存不足'
+                return Flask(__name__).make_response((jsonify(error_result), 403))
+            else:
+                product.AMOUNT -= input_json['amount']
+                cart = Cart(user_id=input_json['user_id'], item_id=input_json['item_id'], amount=input_json['amount'])
+                try:
+                    DAOUtils.get_cart_dao().insert_cart(cart)
+                    LogUtils.insert_user_log(user_id=input_json['user_id'],
+                                             action='加入商品至購物車', remark=str(json.dumps(input_json)))
+                    DAOUtils.commit()
+                    return Flask(__name__).make_response(('', 201))
+                except:
+                    DAOUtils.rollback()
+                    error_result = dict()
+                    error_result['error'] = str(sys.exc_info())
+                    return Flask(__name__).make_response((jsonify(error_result), 406))
 
     @staticmethod
     def __delete_cart():
         input_json = request.get_json()
-        carts = DAOUtils.get_cart_dao().get_carts("USER_ID = '{USER_ID}' AND ITEM_ID = '{ITEM_ID}'",
-                                                USER_ID=input_json['user_id'], ITEM_ID=input_json['item_id'])
+        with lock:
+            carts = DAOUtils.get_cart_dao().get_carts("USER_ID = '{USER_ID}' AND ITEM_ID = '{ITEM_ID}'",
+                                                    USER_ID=input_json['user_id'], ITEM_ID=input_json['item_id'])
+            product = DAOUtils.get_product_dao().get_product("ITEM_ID = '{ITEM_ID}'", ITEM_ID=input_json['item_id'])
 
-        try:
-            for cart in carts:
-                DAOUtils.get_cart_dao().delete_cart(cart)
-            LogUtils.insert_user_log(user_id=input_json['user_id'],
-                                     action='移除商品至購物車', remark=str(json.dumps(input_json)))
-            DAOUtils.commit()
-            return Flask(__name__).make_response(('', 204))
-        except:
-            DAOUtils.rollback()
-            error_result = dict()
-            error_result['error'] = str(sys.exc_info())
-            return Flask(__name__).make_response((jsonify(error_result), 406))
+            try:
+                for cart in carts:
+                    DAOUtils.get_cart_dao().delete_cart(cart)
+                    product.AMOUNT += cart.AMOUNT
+                LogUtils.insert_user_log(user_id=input_json['user_id'],
+                                         action='移除商品至購物車', remark=str(json.dumps(input_json)))
+                DAOUtils.commit()
+                return Flask(__name__).make_response(('', 204))
+            except:
+                DAOUtils.rollback()
+                error_result = dict()
+                error_result['error'] = str(sys.exc_info())
+                return Flask(__name__).make_response((jsonify(error_result), 406))
 
 
 
