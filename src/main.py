@@ -34,6 +34,12 @@ def add_credit():
     return UserHandler.add_credit()
 
 
+# 查詢會員操作日誌
+@app.route('/user/action_log/<user_id>', methods=['GET'])
+def get_user_log(user_id):
+    return UserHandler.get_user_log(user_id)
+
+
 # 商品加入至購物車、購物車移除商品
 @app.route('/cart', methods=['POST', 'DELETE'])
 def cart_handler():

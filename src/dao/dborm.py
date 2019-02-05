@@ -20,6 +20,8 @@ class User(Base):
     CREATED_TIME = Column('CREATED_TIME', Numeric(13))
     LAST_LOGIN_TIME = Column('LAST_LOGIN_TIME', Numeric(13))
 
+    USER_LOGS = relationship('UserLog')
+
     def __init__(self, account=None, pwd=None, name=None, credit=None):
         self.ACCOUNT = account
         self.PASSWORD = md5(pwd.encode('utf-8')).hexdigest()
@@ -28,6 +30,23 @@ class User(Base):
         self.USER_ID = str(uuid.uuid4())
         self.CREATED_TIME = int(round(time.time() * 1000))
         self.LAST_LOGIN_TIME = int(round(time.time() * 1000))
+
+
+class UserLog(Base):
+    __tablename__ = 'USERS_LOG'
+
+    USER_LOG_ID = Column('USER_LOG_ID', String(36), primary_key=True)
+    USER_ID = Column('USER_ID', String(36), ForeignKey('USERS.USER_ID'))
+    ACTION = Column('ACTION', String(30))
+    CREATED_TIME = Column('CREATED_TIME', Numeric(13))
+    REMARK = Column('REMARK', String(200))
+
+    def __init__(self, user_id=None, action=None, remark=None):
+        self.USER_LOG_ID = str(uuid.uuid4())
+        self.USER_ID = user_id
+        self.ACTION = action
+        self.CREATED_TIME = int(round(time.time() * 1000))
+        self.REMARK = remark
 
 
 class Product(Base):

@@ -27,7 +27,7 @@ class OrderDAOImpl(OrderDAO):
         condition_str = 'AP' + today_str + '%'
         max_ord_no = DAOUtils.query_first(obj=func.max(OrderHeader.ORD_NO).label('MAX_ORD_NO'),
                                           condition=OrderHeader.ORD_NO.like(condition_str))
-        if max_ord_no:
+        if max_ord_no[0]:
             return 'AP' + today_str + str(int(max_ord_no[0][10:]) + 1).rjust(5, '0')
         else:
             return 'AP' + today_str + '00001'

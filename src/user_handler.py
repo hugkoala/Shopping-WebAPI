@@ -1,6 +1,8 @@
-from flask import Flask, jsonify, request;
+from flask import Flask, jsonify, request, json;
 from dao.dao_utils import DAOUtils;
 from threading import Lock;
+from log_utils import LogUtils;
+import sys;
 
 lock = Lock()
 
@@ -26,6 +28,8 @@ class UserHandler:
             if user:
                 try:
                     user.CREDIT += input_json['amount']
+                    LogUtils.insert_user_log(user_id=input_json['user_id'],
+                                             action='會員存款', remark=str(json.dumps(input_json)))
                     DAOUtils.commit()
                     result = dict()
                     result['user_id'] = user.USER_ID
@@ -38,6 +42,25 @@ class UserHandler:
                     return Flask(__name__).make_response((jsonify(error_result), 406))
             else:
                 return Flask(__name__).make_response(('', 404))
+
+    @staticmethod
+    def get_user_log(user_id):
+        user = DAOUtils.get_user_dao().get_user("USER_ID = '{USER_ID}'", USER_ID=user_id)
+
+        result = dict()
+        result['account'] = user.ACCOUNT
+        result['name'] = user.NAME
+        result['action_list'] = list()
+
+        for user_log in user.USER_LOGS:
+            action_item = dict()
+            action_item['action'] = user_log.ACTION
+            action_item['created_time'] = int(user_log.CREATED_TIME)
+            action_item['remarks'] = user_log.REMARK
+            result['action_list'].append(action_item)
+
+        return Flask(__name__).make_response((jsonify(result), 200))
+
 
 
 

@@ -1,6 +1,7 @@
-from flask import Flask, jsonify, request;
+from flask import Flask, jsonify, request, json;
 from dao.dao_utils import DAOUtils;
 from dao.dborm import Cart
+from log_utils import LogUtils;
 import sys;
 
 
@@ -25,6 +26,8 @@ class CartHandler:
         cart = Cart(user_id=input_json['user_id'], item_id=input_json['item_id'], amount=input_json['amount'])
         try:
             DAOUtils.get_cart_dao().insert_cart(cart)
+            LogUtils.insert_user_log(user_id=input_json['user_id'],
+                                     action='加入商品至購物車', remark=str(json.dumps(input_json)))
             DAOUtils.commit()
             return Flask(__name__).make_response(('', 201))
         except:
@@ -42,6 +45,8 @@ class CartHandler:
         try:
             for cart in carts:
                 DAOUtils.get_cart_dao().delete_cart(cart)
+            LogUtils.insert_user_log(user_id=input_json['user_id'],
+                                     action='移除商品至購物車', remark=str(json.dumps(input_json)))
             DAOUtils.commit()
             return Flask(__name__).make_response(('', 204))
         except:
