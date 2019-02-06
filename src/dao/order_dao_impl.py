@@ -7,25 +7,25 @@ import datetime;
 class OrderDAOImpl(OrderDAO):
 
     @staticmethod
-    def insert_order_header(order_header):
+    def insert_order_header(db, order_header):
         try:
-            DAOUtils.insert(order_header)
+            DAOUtils.insert(db, order_header)
         except:
             raise
 
     @staticmethod
-    def insert_order_item(order_item):
+    def insert_order_item(db, order_item):
         try:
-            DAOUtils.insert(order_item)
+            DAOUtils.insert(db, order_item)
         except:
             raise
 
     @staticmethod
-    def get_max_order_no():
+    def get_max_order_no(db):
         from sqlalchemy import func
         today_str = datetime.datetime.now().strftime('%Y%m%d')
         condition_str = 'AP' + today_str + '%'
-        max_ord_no = DAOUtils.query_first(obj=func.max(OrderHeader.ORD_NO).label('MAX_ORD_NO'),
+        max_ord_no = DAOUtils.query_first(db=db, obj=func.max(OrderHeader.ORD_NO).label('MAX_ORD_NO'),
                                           condition=OrderHeader.ORD_NO.like(condition_str))
         if max_ord_no[0]:
             return 'AP' + today_str + str(int(max_ord_no[0][10:]) + 1).rjust(5, '0')

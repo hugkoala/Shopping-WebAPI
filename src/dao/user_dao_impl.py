@@ -5,21 +5,21 @@ from .dborm import User;
 
 class UserDAOImpl(UserDAO):
     @staticmethod
-    def get_users():
-        return DAOUtils.query_list(User)
+    def get_users(db):
+        return DAOUtils.query_list(db, User)
 
     @staticmethod
-    def get_users(condition, **kwargs):
-        return DAOUtils.query_list(User, condition, **kwargs)
+    def get_users(db, condition, **kwargs):
+        return DAOUtils.query_list(db, User, condition, **kwargs)
 
     @staticmethod
-    def get_user(condition, **kwargs):
-        return DAOUtils.query_first(User, condition, **kwargs)
+    def get_user(db, condition, **kwargs):
+        return DAOUtils.query_first(db, User, condition, **kwargs)
 
     @staticmethod
-    def insert_user(user):
+    def insert_user(db, user):
         try:
-            DAOUtils.insert(user)
+            DAOUtils.insert(db, user)
         except:
             raise
 

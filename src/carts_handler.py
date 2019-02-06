@@ -18,8 +18,9 @@ class CartsHandler:
 
     @staticmethod
     def __get_carts():
+        db = DAOUtils.get_db()
         input_json = request.get_json()
-        carts = DAOUtils.get_cart_dao().get_carts("USER_ID = '{USER_ID}'", USER_ID=input_json['user_id'])
+        carts = DAOUtils.get_cart_dao().get_carts(db, "USER_ID = '{USER_ID}'", USER_ID=input_json['user_id'])
         result = dict()
         item_list = list()
         for cart in carts:
@@ -32,6 +33,7 @@ class CartsHandler:
             item_dict['subtotal'] = int(cart.PRODUCT.ITEM_PRICE * cart.AMOUNT)
             item_list.append(item_dict)
 
+        DAOUtils.close(db)
         result['total'] = len(carts)
         result['item_list'] = item_list
 
