@@ -9,6 +9,11 @@ class CartHandler:
 
     @staticmethod
     def __methods_to_func(action):
+        """
+        Request method to function
+        :param action:Request method
+        :return:function
+        """
         switcher = {
             'POST': CartHandler.__add_cart,
             'DELETE': CartHandler.__delete_cart
@@ -22,6 +27,10 @@ class CartHandler:
 
     @staticmethod
     def __add_cart():
+        """
+        Add Item to Cart
+        :return: Response
+        """
         db = DAOUtils.get_db()
         input_json = request.get_json()
         product = DAOUtils.get_product_dao().get_product(db, "ITEM_ID = '{ITEM_ID}'", ITEM_ID=input_json['item_id'])
@@ -49,6 +58,10 @@ class CartHandler:
 
     @staticmethod
     def __delete_cart():
+        """
+        Remove Item from Cart
+        :return: Response
+        """
         db = DAOUtils.get_db()
         input_json = request.get_json()
         carts = DAOUtils.get_cart_dao().get_carts(db, "USER_ID = '{USER_ID}' AND ITEM_ID = '{ITEM_ID}'",

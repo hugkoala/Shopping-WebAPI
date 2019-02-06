@@ -6,6 +6,11 @@ class CartsHandler:
 
     @staticmethod
     def __methods_to_func(action):
+        """
+        Request method to function
+        :param action:Request method
+        :return:function
+        """
         switcher = {
             'GET': CartsHandler.__get_carts
         }
@@ -18,6 +23,10 @@ class CartsHandler:
 
     @staticmethod
     def __get_carts():
+        """
+        Get Cart Content By User_ID
+        :return:Response
+        """
         db = DAOUtils.get_db()
         input_json = request.get_json()
         carts = DAOUtils.get_cart_dao().get_carts(db, "USER_ID = '{USER_ID}'", USER_ID=input_json['user_id'])

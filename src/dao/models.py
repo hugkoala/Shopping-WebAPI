@@ -29,23 +29,51 @@ class DAO:
 
     @staticmethod
     def get_db():
+        """
+        Get DB Session
+        :return database():
+        """
         database = sessionmaker(bind=engine)
         return database()
 
     @staticmethod
     def commit(db):
+        """
+        Session Commit
+
+        :param db: database()
+        """
         db.commit()
 
     @staticmethod
     def rollback(db):
+        """
+        Session Rollback
+
+        :param db: database()
+        """
         db.rollback()
 
     @staticmethod
     def close(db):
+        """
+        Session Close
+
+        :param db: database()
+        """
         db.close()
 
     @staticmethod
     def query_first(db=None, obj=None, condition='', **kwargs):
+        """
+        Query first row By ORM Obj & filter condition
+
+        :param db: database()
+        :param obj:ORM Object
+        :param condition:Filter Condition
+        :param kwargs:The value of Filter Condition
+        :return DAO.__query_filter()
+        """
         if not (isinstance(obj, elements.Label) or isinstance(obj, DeclarativeMeta)):
             return
         return DAO.__query_filter(
@@ -58,6 +86,15 @@ class DAO:
 
     @staticmethod
     def query_list(db=None, obj=None, condition='', **kwargs):
+        """
+        Query list By ORM Obj & filter condition
+
+        :param db: database()
+        :param obj:ORM Object
+        :param condition:Filter Condition
+        :param kwargs:The value of Filter Condition
+        :return DAO.__query_filter()
+        """
         if not (isinstance(obj, elements.Label) or isinstance(obj, DeclarativeMeta)):
             return
         return DAO.__query_filter(
@@ -70,6 +107,15 @@ class DAO:
 
     @staticmethod
     def __query_filter(db=None, obj=None, condition='', query_type=None, **kwargs):
+        """
+        Handle condition & kwargs
+
+        :param db: database()
+        :param obj:ORM Object
+        :param condition:Filter Condition
+        :param kwargs:The value of Filter Condition
+        :return DAO.__query_type()
+        """
         if condition == '':
             return DAO.__query_type(
                 db=db,
@@ -94,22 +140,38 @@ class DAO:
 
     @staticmethod
     def __query_type(db=None, obj=None, query_type=None, query_filter=None):
-            if query_type == 'one':
-                return db.query(obj).filter(query_filter).first()
-            else:
-                return db.query(obj).filter(query_filter).all()
+        """
+        Query By Filter & ORM Object
+
+        :param db: database()
+        :param obj:ORM Object
+        :param query_type:one or all
+        :param query_filter:Handled Filter
+        :return obj or the list of obj
+        """
+        if query_type == 'one':
+            return db.query(obj).filter(query_filter).first()
+        else:
+            return db.query(obj).filter(query_filter).all()
 
     @staticmethod
     def insert(db, obj):
+        """
+        Session Insert
+
+        :param db: database()
+        :param obj: ORM Object instance
+        """
         db.add(obj)
 
     @staticmethod
-    def update(obj=None, condition='', **kwargs):
-        if not obj:
-            return
-
-    @staticmethod
     def delete(db, obj):
+        """
+        Session Delete
+
+        :param db: database()
+        :param obj: ORM Object instance
+        """
         db.delete(obj)
 
 

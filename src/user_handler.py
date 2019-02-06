@@ -8,19 +8,32 @@ class UserHandler:
 
     @staticmethod
     def get_user(account):
+        """
+        Get User Info
+        :param account:the account of user
+        :return:Response
+        """
         db = DAOUtils.get_db()
         user = DAOUtils.get_user_dao().get_user(db, "ACCOUNT = '{ACCOUNT}'", ACCOUNT=account)
-        result = dict()
-        result['account'] = user.ACCOUNT
-        result['name'] = user.NAME
-        result['credit'] = user.CREDIT
-        result['created_time'] = int(user.CREATED_TIME)
-        result['last_login_time'] = int(user.LAST_LOGIN_TIME)
-        DAOUtils.close(db)
-        return Flask(__name__).make_response((jsonify(result), 200))
+        if user:
+            result = dict()
+            result['account'] = user.ACCOUNT
+            result['name'] = user.NAME
+            result['credit'] = user.CREDIT
+            result['created_time'] = int(user.CREATED_TIME)
+            result['last_login_time'] = int(user.LAST_LOGIN_TIME)
+            DAOUtils.close(db)
+            return Flask(__name__).make_response((jsonify(result), 200))
+        else:
+            DAOUtils.close(db)
+            return Flask(__name__).make_response(('', 404))
 
     @staticmethod
     def add_credit():
+        """
+        Add User Credit
+        :return:Response
+        """
         db = DAOUtils.get_db()
         input_json = request.get_json()
         user = DAOUtils.get_user_dao().get_user(db, "USER_ID = '{USER_ID}'", USER_ID=input_json['user_id'])
@@ -47,23 +60,30 @@ class UserHandler:
 
     @staticmethod
     def get_user_log(user_id):
+        """
+        Get User Action Log
+        :param user_id:the user_id of user
+        :return:Response
+        """
         db = DAOUtils.get_db()
         user = DAOUtils.get_user_dao().get_user(db, "USER_ID = '{USER_ID}'", USER_ID=user_id)
+        if user:
+            result = dict()
+            result['account'] = user.ACCOUNT
+            result['name'] = user.NAME
+            result['action_list'] = list()
 
-        result = dict()
-        result['account'] = user.ACCOUNT
-        result['name'] = user.NAME
-        result['action_list'] = list()
-
-        for user_log in user.USER_LOGS:
-            action_item = dict()
-            action_item['action'] = user_log.ACTION
-            action_item['created_time'] = int(user_log.CREATED_TIME)
-            action_item['remarks'] = user_log.REMARK
-            result['action_list'].append(action_item)
-        DAOUtils.close(db)
-        return Flask(__name__).make_response((jsonify(result), 200))
-
+            for user_log in user.USER_LOGS:
+                action_item = dict()
+                action_item['action'] = user_log.ACTION
+                action_item['created_time'] = int(user_log.CREATED_TIME)
+                action_item['remarks'] = user_log.REMARK
+                result['action_list'].append(action_item)
+            DAOUtils.close(db)
+            return Flask(__name__).make_response((jsonify(result), 200))
+        else:
+            DAOUtils.close(db)
+            return Flask(__name__).make_response(('', 404))
 
 
 

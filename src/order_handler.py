@@ -9,6 +9,10 @@ class OrderHandler:
 
     @staticmethod
     def cart_to_order():
+        """
+        Generate Order From Cart, and Delete Cart
+        :return:Response
+        """
         db = DAOUtils.get_db()
         input_json = request.get_json()
 

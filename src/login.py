@@ -8,6 +8,10 @@ class Login:
 
     @staticmethod
     def login():
+        """
+        User Login
+        :return:Response
+        """
         db = DAOUtils.get_db()
         input_json = request.get_json()
         user = DAOUtils.get_user_dao().get_user(db, condition="ACCOUNT = '{ACCOUNT}' AND PASSWORD = '{PASSWORD}'",

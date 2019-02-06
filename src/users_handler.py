@@ -8,6 +8,10 @@ class UsersHandler:
 
     @staticmethod
     def add_user():
+        """
+        Add New User
+        :return:Response
+        """
         db = DAOUtils.get_db()
         input_json = request.get_json()
         user = User(account=input_json['account'], pwd=input_json['password'], name=input_json['name'],
