@@ -1,10 +1,7 @@
 from flask import Flask, jsonify, request, json;
 from dao.dao_utils import DAOUtils;
-from threading import Lock;
 from log_utils import LogUtils;
 import sys;
-
-lock = Lock()
 
 
 class UserHandler:
@@ -27,27 +24,26 @@ class UserHandler:
         db = DAOUtils.get_db()
         input_json = request.get_json()
         user = DAOUtils.get_user_dao().get_user(db, "USER_ID = '{USER_ID}'", USER_ID=input_json['user_id'])
-        with lock:
-            if user:
-                try:
-                    user.CREDIT += input_json['amount']
-                    LogUtils.insert_user_log(db, user_id=input_json['user_id'],
-                                             action='會員存款', remark=str(json.dumps(input_json)))
-                    DAOUtils.commit(db)
-                    result = dict()
-                    result['user_id'] = user.USER_ID
-                    result['name'] = user.NAME
-                    return Flask(__name__).make_response((jsonify(result), 200))
-                except:
-                    DAOUtils.rollback(db)
-                    error_result = dict()
-                    error_result['error'] = str(sys.exc_info())
-                    return Flask(__name__).make_response((jsonify(error_result), 406))
-                finally:
-                    DAOUtils.close(db)
-            else:
+        if user:
+            try:
+                user.CREDIT += input_json['amount']
+                LogUtils.insert_user_log(db, user_id=input_json['user_id'],
+                                         action='會員存款', remark=str(json.dumps(input_json)))
+                DAOUtils.commit(db)
+                result = dict()
+                result['user_id'] = user.USER_ID
+                result['name'] = user.NAME
+                return Flask(__name__).make_response((jsonify(result), 200))
+            except:
+                DAOUtils.rollback(db)
+                error_result = dict()
+                error_result['error'] = str(sys.exc_info())
+                return Flask(__name__).make_response((jsonify(error_result), 406))
+            finally:
                 DAOUtils.close(db)
-                return Flask(__name__).make_response(('', 404))
+        else:
+            DAOUtils.close(db)
+            return Flask(__name__).make_response(('', 404))
 
     @staticmethod
     def get_user_log(user_id):

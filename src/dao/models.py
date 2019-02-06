@@ -2,15 +2,18 @@ from sqlalchemy import create_engine;
 from sqlalchemy.orm import sessionmaker;
 from sqlalchemy.sql import elements;
 from sqlalchemy.ext.declarative.api import DeclarativeMeta;
-
+import configparser;
 
 # Setting Database Info
 
-host = 'localhost'
-port = 1521
-sid = 'orcl'
-username = 'DEV_WEB_API'
-password = '123456'
+config = configparser.ConfigParser()
+config.read('db.ini')
+
+host = config['DEFAULT']['host']
+port = config['DEFAULT']['port']
+sid = config['DEFAULT']['sid']
+username = config['DEFAULT']['username']
+password = config['DEFAULT']['password']
 
 
 engine = create_engine(

@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship;
 Base = declarative_base()
 
 
-# Setting Table Column
+# 定義 ORM Table Object
 
 class User(Base):
     __tablename__= 'USERS'

@@ -15,15 +15,13 @@ lock = Lock()
 # 會員登入
 @app.route('/login', methods=['POST'])
 def login():
-    with lock:
-        return Login.login()
+    return Login.login()
 
 
 # 註冊
 @app.route('/users', methods=['POST'])
 def add_user():
-    with lock:
-        return UsersHandler.add_user()
+    return UsersHandler.add_user()
 
 
 # 查詢會員資料
