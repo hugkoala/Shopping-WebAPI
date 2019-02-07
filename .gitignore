@@ -115,3 +115,6 @@ dmypy.json
 
 .idea
 .idea/
+.idea/vcs.xml
+.idea/vcs.xml
+.idea/workspace.xml
