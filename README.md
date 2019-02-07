@@ -18,6 +18,10 @@ Shopping-WebAPI
 ## **Getting Started**
 
 ### **Requirements**
+    flask
+    hashlib
+    sqlalchemy
+    Oracle
 
 ### **DB Setting**
 + Adjust [db.ini](./src/db.ini) to setting Oracle DB
