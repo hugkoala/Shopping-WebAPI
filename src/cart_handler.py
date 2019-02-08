@@ -33,8 +33,9 @@ class CartHandler:
         """
         db = DAOUtils.get_db()
         input_json = request.get_json()
+        user = DAOUtils.get_user_dao().get_user(db, condition="USER_ID = '{USER_ID}'", USER_ID=input_json['user_id'])
         product = DAOUtils.get_product_dao().get_product(db, "ITEM_ID = '{ITEM_ID}'", ITEM_ID=input_json['item_id'])
-        if product:
+        if user and product:
             if input_json['amount'] > product.AMOUNT:
                 DAOUtils.close(db)
                 error_result = dict()
@@ -57,6 +58,7 @@ class CartHandler:
                 finally:
                     DAOUtils.close(db)
         else:
+            DAOUtils.close(db)
             return Flask(__name__).make_response(('', 404))
 
     @staticmethod
@@ -67,25 +69,34 @@ class CartHandler:
         """
         db = DAOUtils.get_db()
         input_json = request.get_json()
-        carts = DAOUtils.get_cart_dao().get_carts(db, "USER_ID = '{USER_ID}' AND ITEM_ID = '{ITEM_ID}'",
-                                                USER_ID=input_json['user_id'], ITEM_ID=input_json['item_id'])
+        user = DAOUtils.get_user_dao().get_user(db, condition="USER_ID = '{USER_ID}'", USER_ID=input_json['user_id'])
         product = DAOUtils.get_product_dao().get_product(db, "ITEM_ID = '{ITEM_ID}'", ITEM_ID=input_json['item_id'])
 
-        try:
-            for cart in carts:
-                DAOUtils.get_cart_dao().delete_cart(db, cart)
-                product.AMOUNT += cart.AMOUNT
-            LogUtils.insert_user_log(db, user_id=input_json['user_id'],
-                                     action='移除商品至購物車', remark=str(json.dumps(input_json)))
-            DAOUtils.commit(db)
-            return Flask(__name__).make_response(('', 204))
-        except:
-            DAOUtils.rollback(db)
-            error_result = dict()
-            error_result['error'] = str(sys.exc_info())
-            return Flask(__name__).make_response((jsonify(error_result), 406))
-        finally:
+        if user and product:
+            try:
+                carts = DAOUtils.get_cart_dao().get_carts(db,
+                                                          condition="USER_ID = '{USER_ID}' AND ITEM_ID = '{ITEM_ID}'",
+                                                          USER_ID=input_json['user_id'], ITEM_ID=input_json['item_id'])
+                if carts:
+                    for cart in carts:
+                        DAOUtils.get_cart_dao().delete_cart(db, cart)
+                        product.AMOUNT += cart.AMOUNT
+                    LogUtils.insert_user_log(db, user_id=input_json['user_id'],
+                                             action='移除商品至購物車', remark=str(json.dumps(input_json)))
+                    DAOUtils.commit(db)
+                    return Flask(__name__).make_response(('', 200))
+                else:
+                    return Flask(__name__).make_response(('', 404))
+            except:
+                DAOUtils.rollback(db)
+                error_result = dict()
+                error_result['error'] = str(sys.exc_info())
+                return Flask(__name__).make_response((jsonify(error_result), 406))
+            finally:
+                DAOUtils.close(db)
+        else:
             DAOUtils.close(db)
+            return Flask(__name__).make_response(('', 404))
 
 
 
