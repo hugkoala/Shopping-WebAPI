@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request;
-from dao.dao_utils import DAOUtils;
+from src.dao.dao_utils import DAOUtils;
 
 
 class CartsHandler:

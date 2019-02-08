@@ -3,11 +3,12 @@ from sqlalchemy.orm import sessionmaker;
 from sqlalchemy.sql import elements;
 from sqlalchemy.ext.declarative.api import DeclarativeMeta;
 import configparser;
+import os;
 
 # Setting Database Info
 
 config = configparser.ConfigParser()
-config.read('db.ini')
+config.read(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'db.ini'))
 
 host = config['DEFAULT']['host']
 port = config['DEFAULT']['port']

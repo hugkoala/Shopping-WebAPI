@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, json;
-from dao.dao_utils import DAOUtils;
-from log_utils import LogUtils;
+from src.dao.dao_utils import DAOUtils;
+from src.log_utils import LogUtils;
 import sys;
 
 

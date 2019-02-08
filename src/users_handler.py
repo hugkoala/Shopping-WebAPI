@@ -1,6 +1,6 @@
 from flask import request, Flask, jsonify;
-from dao.dao_utils import DAOUtils;
-from dao.dborm import User;
+from src.dao.dao_utils import DAOUtils;
+from src.dao.dborm import User;
 import sys;
 
 

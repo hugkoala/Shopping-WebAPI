@@ -24,8 +24,8 @@ Shopping-WebAPI
     Oracle
 
 ### **DB Setting**
-+ Adjust [db.ini](./src/db.ini) to setting Oracle DB
-+ execute [DB.sql](./test/DB.sql) to create schema
++ Adjust [db.ini](src/dao/db.ini) to setting Oracle DB
++ execute [DB.sql](tests/DB.sql) to create schema
 
 
 ### **Console**
@@ -36,7 +36,7 @@ Shopping-WebAPI
 ### **Unit Test**
 
 ### **Test**
-+ import [shopping.postman_collection.json](./test/shopping.postman_collection.json) to Postman
++ import [shopping.postman_collection.json](tests/shopping.postman_collection.json) to Postman
 
     
    

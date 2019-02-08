@@ -1,5 +1,5 @@
-from dao.dao_utils import DAOUtils;
-from dao.dborm import UserLog;
+from src.dao.dao_utils import DAOUtils;
+from src.dao.dborm import UserLog;
 
 
 class LogUtils:

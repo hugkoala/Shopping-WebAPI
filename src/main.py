@@ -1,10 +1,10 @@
 from flask import Flask;
-from user_handler import UserHandler;
-from users_handler import UsersHandler;
-from cart_handler import CartHandler;
-from carts_handler import CartsHandler;
-from order_handler import OrderHandler;
-from login import Login;
+from src.user_handler import UserHandler;
+from src.users_handler import UsersHandler;
+from src.cart_handler import CartHandler;
+from src.carts_handler import CartsHandler;
+from src.order_handler import OrderHandler;
+from src.login import Login;
 from threading import Lock;
 
 

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, json;
-from dao.dao_utils import DAOUtils;
+from src.dao.dao_utils import DAOUtils;
 import time;
 from hashlib import md5;
 
