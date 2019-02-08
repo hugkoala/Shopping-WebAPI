@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "account": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "action_list": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "created_time": {
+              "type": "integer"
+            },
+            "remarks": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "action",
+            "created_time",
+            "remarks"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "account",
+    "name",
+    "action_list"
+  ]
+}

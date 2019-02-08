@@ -43,7 +43,7 @@ class OrderHandler:
                     LogUtils.insert_user_log(db, user_id=input_json['user_id'],
                                              action='購物車結帳', remark=ord_no)
                     DAOUtils.commit(db)
-                    return Flask(__name__).make_response(('', 204))
+                    return Flask(__name__).make_response(('', 201))
             except:
                 DAOUtils.rollback(db)
                 error_result = dict()

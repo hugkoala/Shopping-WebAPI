@@ -17,7 +17,7 @@ class TestGetUser(TestCase):
 
         account = 'leo.li'
         user = DAOUtils.get_user_dao().get_user(db, condition="ACCOUNT = '{ACCOUNT}'",
-                                                ACCOUNT=account,)
+                                                ACCOUNT=account)
 
         response = self.app.get('/user/' + account, headers={"Content-Type": "application/json"})
 
