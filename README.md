@@ -35,6 +35,8 @@ Shopping-WebAPI
     python -u main.py
 
 ### **Unit Test**
++ [Unit Test](tests)
++ execute test_XXX.py in folder
 
 ### **Test**
 + import [shopping.postman_collection.json](tests/shopping.postman_collection.json) to Postman
