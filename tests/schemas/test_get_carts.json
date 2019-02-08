@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "total": {
+      "type": "integer"
+    },
+    "item_list": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "integer"
+            },
+            "item_name": {
+              "type": "string"
+            },
+            "item_price": {
+              "type": "integer"
+            },
+            "amount": {
+              "type": "integer"
+            },
+            "create_time": {
+              "type": "integer"
+            },
+            "subtotal": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "item_id",
+            "item_name",
+            "item_price",
+            "amount",
+            "create_time",
+            "subtotal"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "total",
+    "item_list"
+  ]
+}
