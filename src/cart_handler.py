@@ -34,27 +34,30 @@ class CartHandler:
         db = DAOUtils.get_db()
         input_json = request.get_json()
         product = DAOUtils.get_product_dao().get_product(db, "ITEM_ID = '{ITEM_ID}'", ITEM_ID=input_json['item_id'])
-        if input_json['amount'] > product.AMOUNT:
-            DAOUtils.close(db)
-            error_result = dict()
-            error_result['error'] = '商品庫存不足'
-            return Flask(__name__).make_response((jsonify(error_result), 403))
-        else:
-            product.AMOUNT -= input_json['amount']
-            cart = Cart(user_id=input_json['user_id'], item_id=input_json['item_id'], amount=input_json['amount'])
-            try:
-                DAOUtils.get_cart_dao().insert_cart(db, cart)
-                LogUtils.insert_user_log(db, user_id=input_json['user_id'],
-                                         action='加入商品至購物車', remark=str(json.dumps(input_json)))
-                DAOUtils.commit(db)
-                return Flask(__name__).make_response(('', 201))
-            except:
-                DAOUtils.rollback(db)
-                error_result = dict()
-                error_result['error'] = str(sys.exc_info())
-                return Flask(__name__).make_response((jsonify(error_result), 406))
-            finally:
+        if product:
+            if input_json['amount'] > product.AMOUNT:
                 DAOUtils.close(db)
+                error_result = dict()
+                error_result['error'] = '商品庫存不足'
+                return Flask(__name__).make_response((jsonify(error_result), 403))
+            else:
+                product.AMOUNT -= input_json['amount']
+                cart = Cart(user_id=input_json['user_id'], item_id=input_json['item_id'], amount=input_json['amount'])
+                try:
+                    DAOUtils.get_cart_dao().insert_cart(db, cart)
+                    LogUtils.insert_user_log(db, user_id=input_json['user_id'],
+                                             action='加入商品至購物車', remark=str(json.dumps(input_json)))
+                    DAOUtils.commit(db)
+                    return Flask(__name__).make_response(('', 201))
+                except:
+                    DAOUtils.rollback(db)
+                    error_result = dict()
+                    error_result['error'] = str(sys.exc_info())
+                    return Flask(__name__).make_response((jsonify(error_result), 406))
+                finally:
+                    DAOUtils.close(db)
+        else:
+            return Flask(__name__).make_response(('', 404))
 
     @staticmethod
     def __delete_cart():
