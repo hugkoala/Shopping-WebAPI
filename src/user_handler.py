@@ -19,7 +19,7 @@ class UserHandler:
             result = dict()
             result['account'] = user.ACCOUNT
             result['name'] = user.NAME
-            result['credit'] = user.CREDIT
+            result['credit'] = int(user.CREDIT)
             result['created_time'] = int(user.CREATED_TIME)
             result['last_login_time'] = int(user.LAST_LOGIN_TIME)
             DAOUtils.close(db)

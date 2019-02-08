@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "account": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "credit": {
+      "type": "integer"
+    },
+    "created_time": {
+      "type": "integer"
+    },
+    "last_login_time": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "account",
+    "name",
+    "credit",
+    "created_time",
+    "last_login_time"
+  ]
+}
