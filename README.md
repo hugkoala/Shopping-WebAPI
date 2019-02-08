@@ -21,6 +21,7 @@ Shopping-WebAPI
     flask
     hashlib
     sqlalchemy
+    jsonschema
     Oracle
 
 ### **DB Setting**
