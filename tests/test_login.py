@@ -11,7 +11,12 @@ class TestLogin(TestCase):
 
     def test_login(self):
         db = DAOUtils.get_db()
-        account = 'leo.li1'
+
+        response = self.app.post('/login', data=json.dumps(dict(account='', password='')),
+                                 headers={"Content-Type": "application/json"})
+        self.assertEqual(response.status_code, 404)
+
+        account = 'leo.li'
         password = '123456'
         body = dict(
             account=account,
@@ -23,6 +28,7 @@ class TestLogin(TestCase):
         response = self.app.post('/login', data=json.dumps(body), headers={"Content-Type": "application/json"})
         if user:
             response_json = response.get_json()
+            self.assertEqual(response.status_code, 200)
             self.assertEqual(response_json['name'], user.NAME, 'Login Response User Name Error!')
             self.assertEqual(response_json['user_id'], user.USER_ID, 'Login Response User ID Error!')
         else:
